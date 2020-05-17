@@ -23,15 +23,7 @@
 
     <include layout="@layout/content_main" />
 
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        mapbox:mapbox_cameraTargetLat="37.7749"
-        mapbox:mapbox_cameraTargetLng="-122.3123"
-        mapbox:mapbox_styleUrl="mapbox://styles/mapbox/traffic-day-v2"
-        mapbox:mapbox_cameraZoom="12"
-        />
+
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
