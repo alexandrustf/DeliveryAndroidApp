@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DeliveryApp</string>
+    <string name="action_settings">Settings</string>
+    <string name="access_token">sk.eyJ1IjoiYWxleGFuZHJ1c3RmIiwiYSI6ImNrYTlrcTVnMzBrZnUyc2w1dG5ramllOWcifQ.sLSWrX2JoQF4TEampn0g2A</string>
+</resources>
