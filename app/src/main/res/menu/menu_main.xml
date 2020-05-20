@@ -12,4 +12,17 @@
         android:orderInCategory="100"
         android:title="@string/navigate"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/deliver"
+        android:orderInCategory="100"
+        android:title="Deliver"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/navigation"
+        android:orderInCategory="100"
+        android:title="Navigation"
+        app:showAsAction="never" />
+
 </menu>
