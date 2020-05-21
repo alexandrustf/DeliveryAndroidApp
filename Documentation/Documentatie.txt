@@ -1,0 +1,39 @@
+Ma numesc Stefan Alexandru-Ioan, grupa IIIA7.
+Aplicatia aceasta de Android face parte dintr-o platforma mai mare. 
+Platforma este o una de livrari care este similara cu conceptul Uber.
+
+Un Client poate livra un pachet acesta intra pe o pagina web si completeaza un formular,
+informatiile sunt prelevate de un server. 
+
+Pachetul va fi livrat de un sofer care are aceasta aplicatie de Android.
+Aplicatia de Android primeste comanda de la Server( Serverul se ocupa de Package dispatcher, adica el
+returneaza cel mai apropiat pachet de locatia soferului).
+
+Aplicatia de Android are un meniu cu 3 pagini: Deliver, Navigation si OrdersHistory.
+
+	1. Deliver - de aici, soferul poate primi comenzi si confirma ca le-a livrat la destinatie.
+		Sunt 3 butoane: 
+			a. CAUTA COMANDA - aici se ia locatia curenta a device-ului si se trimite un request la server pentru
+				a primi cea mai apropiata comanda de sofer
+					Am adaugat urmatoarele dependinte: 
+						'com.google.android.gms:play-services-location:17.0.0' pt locatie
+					si 	'com.amitshekhar.android:android-networking:1.0.2' pentru call-urile REST
+				Dupa ce este primit raspunsul la request, detaliile vor fi afisate pe ecran. Iar comanda
+			va fi stocata in baza de date. Am folosit o baza de date ROOM. AM creeat clasa OrderDao si Order.
+			In OrderDao am devenit mai multe query-uri imi folosesc in aplicatie.
+			
+			b. COMANDA PRELUATA - soferul va apasa pe acest buton atunci cand a preluat coletul de la cel care il trimite
+			Se va updata in baza de date starea acestuia.
+
+			c. COMANDA LIVRATA - soferul va apasa pe acest buton dupa ce a livrat comanda la cel care trebuie sa o primeasca
+			Se va updata in baza de date, starea comenzii.
+
+	2. Navigation - Aici va aparea o harta google maps(am introdus depedinta la 'com.google.android.gms:play-services-maps:17.0.0') 
+		Vom vedea pe harta 2 markeri cel verde este pentru locatia noastra iar cel rosu pentru locatia unde trebuie livrat coletul.
+		Daca apasam pe iconita din stanga sus se va creea un Intent catre Route to Route google maps si va porni navigatia
+			de la locatia in care suntem locatia unde trebuie livrat coletul
+	
+	3. Orders History - Aici putem vedea toate comenzile stocate in baza de date si detalii despre acestea.
+
+Puteti vizualiza si videoclipul. In cazul in care downloadati aplicatia, este posibil ca serverul sa nu mai fie hostat in Cloud.
+						
