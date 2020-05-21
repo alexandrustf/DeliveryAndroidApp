@@ -6,5 +6,6 @@
     <string name="best_delivery_url">https://delivery-app-deploy2.azurewebsites.net/best-delivery</string>
     <string name="packages_url">https://delivery-app-deploy2.azurewebsites.net/packages</string>
     <string name="title_activity_navigation">Map</string>
+    <string name="title_activity_orders_history">OrdersHistory</string>
 
 </resources>

@@ -1,10 +1,12 @@
 package com.example.deliveryapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +20,12 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
@@ -26,28 +34,74 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Deliver extends AppCompatActivity {
 
     private TextView order;
-    private JSONObject bestDeliveryResponse;
 
-    private double deliverNowLat;
-    private double deliverNowLng;
+    private FusedLocationProviderClient fusedLocationClient;
+
     private DeliverCoordinates deliver;
+    private AppDatabase database;
+
+    private LatLng myLocation;
+    private Order currentOrder;
+
+    private void InsertDatabase(Order order){
+        order.uid = getUnUsedId();
+        database.getOrderDao().insertAll(order);
+    }
+
+    private void UpdatePickUp() {
+        if(currentOrder != null)
+            database.getOrderDao().updatePickUp(true,currentOrder.uid);
+    }
+
+    private void UpdateDelivered() {
+        if(currentOrder != null)
+            database.getOrderDao().updateDelivered(true,currentOrder.uid);
+    }
+    private Order getLast(){
+        List<Order> orders = database.getOrderDao().getAll();
+        return orders.get(orders.size() - 1 );
+    }
+
+    private int getUnUsedId() {
+        return database.getOrderDao().getAll().size() + 10000;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deliver);
         order = findViewById(R.id.Order);
-
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        database = Room.databaseBuilder(this, AppDatabase.class, "db-orders")
+                .allowMainThreadQueries()   //Allows room to do operation on main thread
+                .build();
         order.setText("Apasa pe Cauta Comanda pentru a livra o comanda!");
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            Log.e("STATE", "" +location.getLatitude());
 
+                            myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        }
+                    }
+                });
         Button searchButton = findViewById(R.id.cautaButton);
         searchButton.setOnClickListener(view -> {
             order.setText("Asteapta cateva secunde pana gasim o comanda pentru tine!");
             AndroidNetworking.initialize(getApplicationContext());
-            getOrder(47.151726, 27.587914);
+            if(currentOrder == null && myLocation != null){
+                getOrder(myLocation.latitude, myLocation.longitude);
+            }
             Log.e("STATE", "heloooooo");
 
             Snackbar.make(view, "Preia pachetul de la adresa celui care o trimite!", Snackbar.LENGTH_LONG)
@@ -62,6 +116,7 @@ public class Deliver extends AppCompatActivity {
                 Snackbar.make(view, "Livreaza pachetul de la adresa celui care o primeste!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 deliver.pickUpAlready = true;
+                UpdatePickUp();
             });
             builder.setNegativeButton("Renunta", (dialog, id) -> { });
             AlertDialog dialog = builder.create();
@@ -77,6 +132,7 @@ public class Deliver extends AppCompatActivity {
                 Snackbar.make(view, "Comanda livrata cu succes! Apasa pe Cauta Comanda pentru a face alta livrare!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
                 deliver.deliveredAlready = true;
+                UpdateDelivered();
             });
             builder.setNegativeButton("Renunta", (dialog, id) -> { });
             AlertDialog dialog = builder.create();
@@ -131,7 +187,16 @@ public class Deliver extends AppCompatActivity {
                                 order.append(result.getString("details")+ "\n");
                                 order.append("Coletul are greutate de: "+ result.getInt("weight") + " kg \n");
 
-
+                                Order order = new Order( 231,result.getString("details"), result.getInt("weight"),
+                                        sender.getString("phone"),
+                                        sender.getDouble("lat"), sender.getDouble("lng")
+                                        , sender.getString("firstName"), sender.getString("lastName"), sender.getString("adress")
+                                        ,receiver.getString("phone"),
+                                        receiver.getDouble("lat"), receiver.getDouble("lng")
+                                        , receiver.getString("firstName"), receiver.getString("lastName"),
+                                        receiver.getString("adress"), false, false);
+                                currentOrder = order;
+                                InsertDatabase(order);
                             }
                             else{
                                 order.setText("Se pare ca a intervenit o eroare, incearca mai tarziu!\n");

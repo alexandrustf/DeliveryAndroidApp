@@ -25,4 +25,10 @@
         android:title="Navigation"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/orders_history"
+        android:orderInCategory="100"
+        android:title="OrdersHistory"
+        app:showAsAction="never" />
+
 </menu>

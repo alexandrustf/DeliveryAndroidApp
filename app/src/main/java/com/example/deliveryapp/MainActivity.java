@@ -80,7 +80,16 @@ public class MainActivity extends AppCompatActivity {
             goToNavigation();
             return true;
         }
+        if (id == R.id.orders_history) {
+            goToOrdersHistory();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goToOrdersHistory(){
+        Intent intent = new Intent(this, OrdersHistory.class);
+        startActivity(intent);
     }
 
     private void goToNavigate(){
