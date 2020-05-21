@@ -1,8 +1,5 @@
 package com.example.deliveryapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -12,26 +9,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class NavRoute extends AppCompatActivity implements OnMapReadyCallback {
@@ -57,8 +50,7 @@ public class NavRoute extends AppCompatActivity implements OnMapReadyCallback {
                 .allowMainThreadQueries()   //Allows room to do operation on main thread
                 .build();
         // Add a marker in Sydney and move the camera
-        LatLng origin = new LatLng(	47.151726, 27.587914);
-        LatLng dest = new LatLng(	47.155726, 27.582914);
+        LatLng iasi = new LatLng(	47.151726, 27.587914);
 
         Order order = getLast();
         if(order.pickUpAlready == false){
@@ -72,9 +64,7 @@ public class NavRoute extends AppCompatActivity implements OnMapReadyCallback {
             mMap.addMarker(new MarkerOptions().position(sydney).title("Go to Receiver"));
         }
 
-
-        mMap.addMarker(new MarkerOptions().position(origin).title("Marker in Iasi"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(origin));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(iasi));
         mMap.moveCamera(CameraUpdateFactory.zoomBy(10));
 
         fusedLocationClient.getLastLocation()
@@ -86,7 +76,8 @@ public class NavRoute extends AppCompatActivity implements OnMapReadyCallback {
                             // Logic to handle location object
                             Log.e("STATE", "" +location.getLatitude());
                             LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-                            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in my loc"));
+                            mMap.addMarker(new MarkerOptions().position(sydney).title("You are here!")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                         }
                     }
@@ -124,19 +115,7 @@ public class NavRoute extends AppCompatActivity implements OnMapReadyCallback {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        if (id == R.id.navigate) {
-            goToNavigate();
-            return true;
-        }
 
         if (id == R.id.deliver) {
             goToOrder();
@@ -147,11 +126,16 @@ public class NavRoute extends AppCompatActivity implements OnMapReadyCallback {
             goToNavigation();
             return true;
         }
+
+        if (id == R.id.orders_history) {
+            goToOrdersHistory();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    private void goToNavigate(){
-        Intent intent = new Intent(this, Navigate.class);
+    private void goToOrdersHistory(){
+        Intent intent = new Intent(this, OrdersHistory.class);
         startActivity(intent);
     }
 

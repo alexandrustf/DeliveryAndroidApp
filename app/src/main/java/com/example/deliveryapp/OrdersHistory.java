@@ -1,5 +1,6 @@
 package com.example.deliveryapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -9,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.room.Room;
 
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -55,7 +58,7 @@ public class OrdersHistory extends AppCompatActivity {
         final ArrayList<String> arrayList = new ArrayList<>();
         for (Order product : list)
         {
-            arrayList.add("Order delivered by: " + product.firstNameSender + product.lastNameSender + "\n"+
+            arrayList.add("Comanda trimisa de: " + product.firstNameSender + product.lastNameSender + "\n"+
 //                    "from adress: " + product.adressSender + " to adress: " + product.adressReceiver + "\n"+
                      " cu urmatoarele detalii: " + product.details +
                     " status: preluat-> " + product.pickUpAlready + " livrat-> " + product.deliveredAlready);
@@ -91,6 +94,39 @@ public class OrdersHistory extends AppCompatActivity {
     private Order getLast(){
         List<Order> orders = database.getOrderDao().getAll();
         return orders.get(orders.size() - 1 );
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.deliver) {
+            goToOrder();
+            return true;
+        }
+
+        if (id == R.id.navigation) {
+            goToNavigation();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void goToOrder(){
+        Intent intent = new Intent(this, Deliver.class);
+        startActivity(intent);
+    }
+
+    private void goToNavigation(){
+        Intent intent = new Intent(this, NavRoute.class);
+        startActivity(intent);
     }
 
 }

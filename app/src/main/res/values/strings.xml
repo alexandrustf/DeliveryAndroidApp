@@ -3,8 +3,8 @@
     <string name="action_settings">Settings</string>
     <string name="navigate">Navigate</string>
     <string name="access_token">sk.eyJ1IjoiYWxleGFuZHJ1c3RmIiwiYSI6ImNrYWI2dnc3NzEybGsyd3BnZTJtZ3A4djEifQ.i4D4FLqnjJRdCPKpYgFXJA</string>
-    <string name="best_delivery_url">https://delivery-app-deploy2.azurewebsites.net/best-delivery</string>
-    <string name="packages_url">https://delivery-app-deploy2.azurewebsites.net/packages</string>
+    <string name="best_delivery_url">http://delivery-server.uksouth.azurecontainer.io/best-delivery</string>
+    <string name="packages_url">http://delivery-server.uksouth.azurecontainer.io/packages</string>
     <string name="title_activity_navigation">Map</string>
     <string name="title_activity_orders_history">OrdersHistory</string>
 

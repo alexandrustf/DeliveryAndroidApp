@@ -37,11 +37,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".Navigation"
-            android:label="@string/title_activity_navigation" />
         <activity android:name=".Deliver" />
-        <activity android:name=".Navigate" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
